@@ -16,3 +16,4 @@ Werkzeug==2.2.2
 zipp==3.17.0
 Flask-SQLAlchemy==3.0.3
 psycopg2-binary==2.9.5
+pytest==7.2.1
