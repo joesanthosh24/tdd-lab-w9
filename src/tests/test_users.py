@@ -3,12 +3,12 @@ import json
 def test_add_user(test_app, test_database):
     client = test_app.test_client()
     resp = client.post(
-        '/users', 
+        '/users',
         data=json.dumps({
-            'username': 'john', 
+            'username': 'john',
             'email': 'john@algonquincollege.com'
         }),
-        content_type='application/json'
+        content_type='application/json',
     )
     data = json.loads(resp.data.decode())
     assert resp.status_code == 201

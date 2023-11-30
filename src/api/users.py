@@ -1,5 +1,6 @@
 from flask import Blueprint, request
 from flask_restx import Resource, Api
+
 from src import db
 from src.api.models import User
 
@@ -12,12 +13,12 @@ class UsersList(Resource):
         username = post_data.get('username')
         email = post_data.get('email')
 
-        db.session.add(User(username=username, email=email)) 
+        db.session.add(User(username=username, email=email))
         db.session.commit()
-        
+
         response_object = {
-            'message': f'{email} was added!' 
+            'message': f'{email} was added!'
         }
-        return    response_object, 201
+        return response_object, 201
 
 api.add_resource(UsersList, '/users')
