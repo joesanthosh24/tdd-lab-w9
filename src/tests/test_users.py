@@ -59,6 +59,19 @@ def test_add_user_duplicate_email(test_app, test_database):
     assert resp.status_code == 400
     assert 'Sorry. That email already exists.' in data['message']
 
+def test_edit_user_duplicate_email(test_app, test_database, add_user):
+    user = add_user('jeffrey', 'jeffrey@testdriven.io')
+    user = add_user('jeff', 'jeff@gmail.com')
+    client = test_app.test_client()
+    resp = client.put(
+        f'/users/{user.id}',
+        data=json.dumps({ 'email': 'jeff@gmail.com' }),
+        content_type='application/json'
+    )
+    data = json.loads(resp.data.decode())
+    assert resp.status_code == 400
+    assert 'Sorry. That email already exists.' in data['message']
+
 def test_single_user(test_app, test_database, add_user):
     user = add_user('jeffrey', 'jeffrey@testdriven.io')
     client = test_app.test_client()
@@ -88,3 +101,29 @@ def test_all_users(test_app, test_database, add_user):
     assert 'john@algonquincollege.com' in data[0]['email']
     assert 'fletcher' in data[1]['username']
     assert 'fletcher@notreal.com' in data[1]['email']
+
+def test_update_user_email(test_app, test_database, add_user):
+    user = add_user('jeffrey', 'jeffrey@testdriven.io')
+    client = test_app.test_client()
+    resp = client.put(
+        f'/users/{user.id}',
+        data=json.dumps({'email': 'jeffrey@yahoo.com'}),
+        content_type='application/json'
+    )
+
+    data = json.loads(resp.data.decode())
+    assert resp.status_code == 200
+    assert f'User with id {user.id} has updated email to jeffrey@yahoo.com' in data['message']
+
+def test_update_user_username(test_app, test_database, add_user):
+    user = add_user('jeffrey', 'jeffrey@testdriven.io')
+    client = test_app.test_client()
+    resp = client.put(
+        f'/users/{user.id}',
+        data=json.dumps({'username': 'jeffrey2'}),
+        content_type='application/json'
+    )
+
+    data = json.loads(resp.data.decode())
+    assert resp.status_code == 200
+    assert f'User with id {user.id} has updated username to jeffrey2' in data['message']

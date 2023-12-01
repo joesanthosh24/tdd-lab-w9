@@ -44,6 +44,32 @@ class Users(Resource):
         if not user:
             api.abort(404, f"User {user_id} does not exist")
         return user, 200
+    
+    def put(self, user_id):
+        user = User.query.filter_by(id=user_id).first()
+        if not user:
+            api.abort(404, f"User {user_id} does not exist")
+
+        data = request.get_json()
+        email = data.get('email')
+        username = data.get('username')
+
+        response_obj = {}
+
+        if username:
+            user.username = username
+            response_obj['message'] = f'User with id {user.id} has updated username to {username}'
+        if email:
+            found_user = User.query.filter_by(email=email).first()
+            
+            if found_user:
+                response_obj['message'] = "Sorry. That email already exists."
+                return response_obj, 400
+            
+            user.email = email
+            response_obj['message'] = f'User with id {user.id} has updated email to {email}'
+
+        return response_obj, 200
 
 api.add_resource(UsersList, '/users')
 api.add_resource(Users, '/users/<int:user_id>')
