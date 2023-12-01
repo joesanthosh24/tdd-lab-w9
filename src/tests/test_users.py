@@ -88,3 +88,31 @@ def test_all_users(test_app, test_database, add_user):
     assert 'john@algonquincollege.com' in data[0]['email']
     assert 'fletcher' in data[1]['username']
     assert 'fletcher@notreal.com' in data[1]['email']
+
+def test_update_user_email(test_app, test_database, add_user):
+    user = add_user('jeffrey', 'jeffrey@testdriven.io')
+    client = test_app.test_client()
+    resp = client.put(
+        f'/users/{user.id}',
+        data=json.dumps({'email': 'jeffrey@yahoo.com'}),
+        content_type='application/json'
+    )
+
+    data = json.loads(resp.data.decode())
+    assert resp.status_code == 200
+    assert 'jeffrey' in data['username']
+    assert 'jeffrey@yahoo.com' in data['email']
+
+def test_update_user_username(test_app, test_database, add_user):
+    user = add_user('jeffrey', 'jeffrey@testdriven.io')
+    client = test_app.test_client()
+    resp = client.put(
+        f'/users/{user.id}',
+        data=json.dumps({'username': 'jeffrey2'}),
+        content_type='application/json'
+    )
+
+    data = json.loads(resp.data.decode())
+    assert resp.status_code == 200
+    assert 'jeffrey2' in data['username']
+    assert 'jeffrey@testdriven.io' in data['email']
