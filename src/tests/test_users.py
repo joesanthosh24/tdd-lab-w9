@@ -130,7 +130,7 @@ def test_update_user_username(test_app, test_database, add_user):
 
 def test_delete_user(test_app, test_database, add_user):
     user = add_user('jeffrey', 'jeffrey@testdriven.io')
-    client = test_app.client()
+    client = test_app.test_client()
     resp = client.delete(
         f'/users/{user.id}',
         content_type='application/json'
