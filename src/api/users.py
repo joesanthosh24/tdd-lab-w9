@@ -69,7 +69,19 @@ class Users(Resource):
             user.email = email
             response_obj['message'] = f'User with id {user.id} has updated email to {email}'
 
+        db.session.commit()
+
         return response_obj, 200
+    
+    def delete(self, user_id):
+        user = User.query.filter_by(id=user_id).first()
+        if not user:
+            api.abort(404, f"User {user_id} does not exist")
+
+        db.session.delete(user)
+        db.session.commit()
+
+        return { "message": f'User with id {user.id} has been deleted' }, 200
 
 api.add_resource(UsersList, '/users')
 api.add_resource(Users, '/users/<int:user_id>')

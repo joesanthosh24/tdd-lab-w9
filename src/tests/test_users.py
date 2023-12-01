@@ -127,3 +127,15 @@ def test_update_user_username(test_app, test_database, add_user):
     data = json.loads(resp.data.decode())
     assert resp.status_code == 200
     assert f'User with id {user.id} has updated username to jeffrey2' in data['message']
+
+def test_delete_user(test_app, test_database, add_user):
+    user = add_user('jeffrey', 'jeffrey@testdriven.io')
+    client = test_app.test_client()
+    resp = client.delete(
+        f'/users/{user.id}',
+        content_type='application/json'
+    )
+
+    data = json.loads(resp.data.decode())
+    assert resp.status_code == 200
+    assert f'User with id {user.id} has been deleted' in data['message']
