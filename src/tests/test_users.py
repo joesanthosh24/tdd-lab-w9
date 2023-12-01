@@ -113,8 +113,7 @@ def test_update_user_email(test_app, test_database, add_user):
 
     data = json.loads(resp.data.decode())
     assert resp.status_code == 200
-    assert 'jeffrey' in data['username']
-    assert 'jeffrey@yahoo.com' in data['email']
+    assert f'User with id {user.id} has updated email to jeffrey@yahoo.com' in data['message']
 
 def test_update_user_username(test_app, test_database, add_user):
     user = add_user('jeffrey', 'jeffrey@testdriven.io')
@@ -127,5 +126,4 @@ def test_update_user_username(test_app, test_database, add_user):
 
     data = json.loads(resp.data.decode())
     assert resp.status_code == 200
-    assert 'jeffrey2' in data['username']
-    assert 'jeffrey@testdriven.io' in data['email']
+    assert f'User with id {user.id} has updated username to jeffrey2' in data['message']
